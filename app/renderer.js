@@ -120,9 +120,17 @@ scanSystemCtlButton.addEventListener('click', function(){
           journalCtlButton.click();
           
 
-          event.preventDefault();
+          //event.preventDefault();
         })
         serviceName.appendChild(clicker);
+
+        let followClicker = document.createElement("button")
+        followClicker.className = "btn btn-outline-secondary"
+        followClicker.innerHTML = "follow"
+        followClicker.addEventListener('click', function(event){
+          followService(x.split(" ", 1)[0])
+        });
+        serviceName.appendChild(followClicker)
 
         n.appendChild(serviceName)
         let loadActveSub = document.createElement("div")
@@ -220,15 +228,46 @@ function loadStorage(){
   });
 }
 
-
-function getLoader(divCount=3){
-   let divs = Array(divCount).fill("<div class='loaderDiv'></div>").join("")
-  return `<div class="loaderContainer>
-            <div class="loader loaderContainer" >
-              <div class="ball-scale-ripple-multiple">
-                ${divs}
-              </div>
-            </div>
-            <div> Loading... </div>
-        </div>`
+function resetSSH(){
+  console.log("reset");
+  ssh.dispose();
+  session = ssh.connect({
+    host: serverIP.value,
+    username: userName.value,
+    privateKey: IDRSA.value
+  })
 }
+
+function followService(serviceName){
+  resetSSH();
+  
+  let jDiv = document.getElementById("journalCtlParsed")
+  jDiv.innerHTML = "";
+  resetSSHButton = document.createElement("button")
+  resetSSHButton.className = "btn btn-outline-secondary btn-alert"
+  resetSSHButton.innerHTML = "stop following"
+  resetSSHButton.addEventListener("click", () => {
+    resetSSH();
+  })
+
+  jDiv.appendChild(resetSSHButton)
+  session.then(function() {
+    // Local, Remote
+    // Command
+    // ssh.execCommand('systemctl',
+    // ['--follow', `--unit ${serviceName} `],
+    ssh.execCommand(`journalctl --unit ${serviceName} --follow`,
+    {
+        onStdout: function(chunk) {
+          // console.log('stdoutChunk', chunk.toString('utf8'))
+          logChunk = document.createElement("p")
+          logChunk.innerHTML = chunk.toString('utf8')
+          
+          jDiv.appendChild(logChunk)
+        },
+        onStderr(chunk) {
+          // console.log('stderrChunk', chunk.toString('utf8'))
+        }
+    })
+  })
+};
