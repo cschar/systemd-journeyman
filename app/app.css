@@ -1,0 +1,33 @@
+
+#flash{
+  background-color: aquamarine;
+  opacity: 0;
+  transition: opacity 1s; 
+}
+#flash.show{
+  
+  opacity: 1;
+}
+
+#flash.error{
+  background-color: red;
+  opacity: 1;
+}
+
+
+.systemctl-service-name{
+  display:inline-block;
+  padding: 8px;
+  background-color: #daf6ff;
+  width: 40%;
+}
+
+.systemctl-service-status{
+  display:inline-block;
+  padding: 5px;
+  background-color: #db9833;
+}
+
+.systemctl-service-description{
+
+}

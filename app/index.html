@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+    <title>systemd</title>
+  </head>
+  <body >
+
+  <div class="container-fluid">
+    <div id="flash"> </div>
+    <section class="row">
+      
+        
+        <div class="col">
+            <h1>Dashboard</h1>
+          <input id="serverIP" >
+          <input id="userName" >
+          <input id="IDPub" > 
+          <button id="saveInfo"> Saveinfo </button>
+          <button id="connectSSH" class="btn btn-primary" > Connect </button>
+          <button id="scanSystemCtlAll"> SystemCtl All</button>
+          <button id="scanSystemCtl" class="btn btn-success"> SystemCtl services</button>
+          <button id="button2"> button2 </button>
+          <input id="serviceName" > 
+          <button id="journalCtlButton"> journalCtl </button>
+        </div>
+        
+        <div class="col" style="background-color: gainsboro">
+            <pre id='stderr'>
+
+            </pre>
+            <pre id='stdout'>
+
+            </pre>
+
+            
+        </div>
+
+        <div class="col">
+
+        </div>
+      </section>
+
+    <section class="row" >
+        <div class="col" id="systemCtlParsed"> 
+        </div>
+    </section>
+
+    <section class="row" >
+        <div class="col">
+          <pre id="journalCtlParsed"> 
+          </pre>
+        </div>
+    </section>
+  </div>
+  </body>
+  <script src="renderer.js"></script>
+</html>
