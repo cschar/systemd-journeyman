@@ -28,23 +28,29 @@ let stderr = document.getElementById("stderr")
 let scanSystemCtlAllButton = document.getElementById("scanSystemCtlAll")
 let scanSystemCtlButton = document.getElementById("scanSystemCtl")
 let systemCtlParsed = document.getElementById("systemCtlParsed")
+let serviceFilters = document.getElementById("serviceFilters")
 
-let Button2 = document.getElementById("button2")
+
 let journalCtlButton = document.getElementById("journalCtlButton")
 
 document.addEventListener("DOMContentLoaded", function(){
   loadStorage();
 })
 
-Button2.addEventListener('click', function(){
- 
-})
+function getFilterNames(){
+  return serviceFilters.value
+  .split(",")
+  .map( x => x.trim())
+  .filter(x => ( x.length > 1))
+}
+
 
 saveButton.addEventListener('click', function(){
   storage.set('sshinfo',
    { serverIP: serverIP.value.trim(),
      userName: userName.value.trim(),
-     IDPub: IDPub.value.trim()  }, function(error) {
+     IDPub: IDPub.value.trim(),
+     serviceFilters: serviceFilters.value.trim()  }, function(error) {
     if (error) throw error;
 
     
@@ -70,11 +76,28 @@ scanSystemCtlButton.addEventListener('click', function(){
     ssh.execCommand('systemctl -a')
     // ssh.execCommand('ls', { cwd:'/var/www' })
     .then(function(result) {
-   
+      
+      systemCtlParsed.innerHTML = "";
+      let filterNames = getFilterNames();
+      console.log(filterNames);
+      
+      let validName = function(name){
+        if (filterNames.length == 0) {return true;}
+
+        let valid = filterNames.filter(function(x){
+          return name.includes(x) ? true: false
+        })
+        return valid.length >= 1
+      }
+
       let r = result.stdout.split("\n").map(function(x){
         return x.trim()
       }).filter(function(x){
-        if (x.split(" ")[0].endsWith("service")){
+        let name = x.split(" ")[0]
+        if (name.endsWith("service") 
+            && validName(name) ){
+            
+            
            return true
         }else{
           return false
@@ -89,13 +112,13 @@ scanSystemCtlButton.addEventListener('click', function(){
         // serviceName.innerHTML = x.split(" ", 1)[0]
         let clicker = document.createElement("button")
         clicker.className = "btn btn-outline-secondary"
-        clicker.innerHTML = x.split(" ", 1)[0]
+        clicker.innerHTML = x.split(" ", 1)[0] 
         clicker.addEventListener('click', function(event){
           
 
           document.getElementById('serviceName').value = x.split(" ", 1)[0]
           journalCtlButton.click();
-          document.getElementById("journalCtlParsed").scrollIntoView()
+          
 
           event.preventDefault();
         })
@@ -120,17 +143,23 @@ scanSystemCtlButton.addEventListener('click', function(){
 })
 
 journalCtlButton.addEventListener('click', function(){
+  
   session.then(function() {
     // Local, Remote
     // Command
+    let jDiv = document.getElementById('journalCtlParsed')
+    // jDiv.scrollIntoView()
+    document.getElementById('loader').style.display = 'block';
+
     let serviceName = document.getElementById('serviceName').value.trim()
     
-    ssh.execCommand('journalctl --unit ' + serviceName)
+    // only show recent 200 lines
+    ssh.execCommand('journalctl --reverse --unit ' + serviceName)
+    // ssh.execCommand('journalctl --unit ' + serviceName)
     // ssh.execCommand('ls', { cwd:'/var/www' })
     .then(function(result) {
-      let jDiv = document.getElementById('journalCtlParsed')
-
       jDiv.innerHTML = result.stdout
+      document.getElementById('loader').style.display = 'none';
     });
   })
 });
@@ -179,9 +208,25 @@ function loadStorage(){
     if (error){
       throw error;
     } 
+    serviceFilters.value = data.serviceFilters
     serverIP.value = data.serverIP
     userName.value = data.userName
     IDPub.value = data.IDPub
     console.log(data);
+
+    connectButton.click();
   });
+}
+
+
+function getLoader(divCount=3){
+   let divs = Array(divCount).fill("<div class='loaderDiv'></div>").join("")
+  return `<div class="loaderContainer>
+            <div class="loader loaderContainer" >
+              <div class="ball-scale-ripple-multiple">
+                ${divs}
+              </div>
+            </div>
+            <div> Loading... </div>
+        </div>`
 }

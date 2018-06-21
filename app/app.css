@@ -28,6 +28,19 @@
   background-color: #db9833;
 }
 
-.systemctl-service-description{
+.loaderDiv{
+  background-color: skyblue;   
+}
 
+#loader{
+  display: none;
+}
+.loaderContainer{
+  margin-left: 50%;
+  margin-top:50px;
+}
+
+.loaderText{
+  margin-left: -25px;
+  padding-top: 50px;
 }

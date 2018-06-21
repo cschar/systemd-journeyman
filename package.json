@@ -28,6 +28,8 @@
     "bootstrap": "^4.1.1",
     "electron-debug": "^2.0.0",
     "electron-json-storage": "^4.1.0",
+    "font-awesome": "^4.7.0",
+    "loaders.css": "^0.1.2",
     "node-ssh": "^5.1.1"
   },
   "build": {

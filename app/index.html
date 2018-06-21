@@ -6,6 +6,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../node_modules/loaders.css/loaders.min.css">
     <link rel="stylesheet" href="app.css">
     <title>systemd</title>
   </head>
@@ -18,37 +20,70 @@
         
         <div class="col">
             <h1>Dashboard</h1>
-          <input id="serverIP" >
-          <input id="userName" >
-          <input id="IDPub" > 
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">serverIP</span>
+                </div>
+                <input id="serverIP" type="text" class="form-control" placeholder="127.0.0.1" >
+              </div>
+
+          
+          <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">userName</span>
+              </div>
+              <input id="userName" type="text" class="form-control" placeholder="spot" >
+            </div>
+
+        
+          <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">serverIP</span>
+              </div>
+              <input id="IDPub" type="text" class="form-control" placeholder="/path/to/id_rsa.pub" >
+          </div>
           <button id="saveInfo"> Saveinfo </button>
           <button id="connectSSH" class="btn btn-primary" > Connect </button>
           <button id="scanSystemCtlAll"> SystemCtl All</button>
           <button id="scanSystemCtl" class="btn btn-success"> SystemCtl services</button>
-          <button id="button2"> button2 </button>
+          
           <input id="serviceName" > 
           <button id="journalCtlButton"> journalCtl </button>
         </div>
-        
         <div class="col" style="background-color: gainsboro">
-            <pre id='stderr'>
+            <div> e.g. postgres, docker, myservice</div>  
+          <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    filters:
+                    <i class="fa fa-search"></i>
+                  </span>
+                </div>
+                <textarea id="serviceFilters" class="form-control" aria-label="With textarea"></textarea>
+          </div>
 
-            </pre>
-            <pre id='stdout'>
+          
+              <div id="loader" class="loader loaderContainer" >
+                <div class="ball-scale-ripple-multiple">
+                  <div class="loaderDiv"></div>
+                  <div class="loaderDiv"></div>
+                </div>
 
-            </pre>
-
-            
+                <div class="loaderText"> Loading... </div>
+              </div>
+              
+          
         </div>
 
-        <div class="col">
+       
 
-        </div>
+        <div class="col-12" id="systemCtlParsed"> 
+          </div>
+
       </section>
 
     <section class="row" >
-        <div class="col" id="systemCtlParsed"> 
-        </div>
+
     </section>
 
     <section class="row" >
@@ -57,6 +92,15 @@
           </pre>
         </div>
     </section>
+
+    <div class="col" style="background-color: gainsboro">
+        <pre id='stderr'>
+
+        </pre>
+        <pre id='stdout'>
+
+        </pre>
+    </div>
   </div>
   </body>
   <script src="renderer.js"></script>
