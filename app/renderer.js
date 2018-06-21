@@ -18,7 +18,7 @@ ssh = new node_ssh()
 let flash = document.getElementById("flash")
 let serverIP = document.getElementById("serverIP")
 let userName = document.getElementById("userName")
-let IDPub = document.getElementById("IDPub")
+let IDRSA = document.getElementById("IDRSA")
 let saveButton = document.getElementById("saveInfo")
 let connectButton = document.getElementById("connectSSH")
 
@@ -49,7 +49,7 @@ saveButton.addEventListener('click', function(){
   storage.set('sshinfo',
    { serverIP: serverIP.value.trim(),
      userName: userName.value.trim(),
-     IDPub: IDPub.value.trim(),
+     IDRSA: IDRSA.value.trim(),
      serviceFilters: serviceFilters.value.trim()  }, function(error) {
     if (error) throw error;
 
@@ -58,7 +58,7 @@ saveButton.addEventListener('click', function(){
     flash.innerHTML = "Info saved"
     setInterval(function(){
       flash.className = ""
-    }, 3000)
+    }, 5000)
   });
 
   
@@ -167,6 +167,8 @@ journalCtlButton.addEventListener('click', function(){
 
 scanSystemCtlAllButton.addEventListener('click', function(){
 
+  document.getElementById("journalCtlParsed").innerHTML = "";
+
   session.then(function() {
     // Local, Remote
     // Command
@@ -185,7 +187,7 @@ connectButton.addEventListener("click", function(){
   session = ssh.connect({
     host: serverIP.value,
     username: userName.value,
-    privateKey: IDPub.value
+    privateKey: IDRSA.value
   }).then(function(){
     flash.className = "show"
     flash.innerHTML = "Conected to server"
@@ -211,7 +213,7 @@ function loadStorage(){
     serviceFilters.value = data.serviceFilters
     serverIP.value = data.serverIP
     userName.value = data.userName
-    IDPub.value = data.IDPub
+    IDRSA.value = data.IDRSA
     console.log(data);
 
     connectButton.click();

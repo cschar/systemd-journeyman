@@ -38,17 +38,35 @@
         
           <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">serverIP</span>
+                <span class="input-group-text" id="basic-addon1">privKey</span>
               </div>
-              <input id="IDPub" type="text" class="form-control" placeholder="/path/to/id_rsa.pub" >
+              <input id="IDRSA" type="text" class="form-control" placeholder="/path/to/id_rsa" >
           </div>
-          <button id="saveInfo"> Saveinfo </button>
-          <button id="connectSSH" class="btn btn-primary" > Connect </button>
-          <button id="scanSystemCtlAll"> SystemCtl All</button>
-          <button id="scanSystemCtl" class="btn btn-success"> SystemCtl services</button>
+          <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+              <button id="connectSSH" class="btn btn-primary" > Connect </button>
+            
+              <button id="saveInfo" class="btn btn-outline-secondary"> Saveinfo </button>
+          </div>
           
-          <input id="serviceName" > 
-          <button id="journalCtlButton"> journalCtl </button>
+          <div class="btn-group mt-4 mb-4" role="group" aria-label="Button group with nested dropdown">
+              
+              <button type="button" id="scanSystemCtl" class="btn btn-success mr-4">
+                  <div class="m-2">SystemCtl Services </span> 
+              </button>
+              
+          </div>
+          <button type="button" id="scanSystemCtlAll" class="btn btn-outline-secondary">
+              <div class="">SystemCtl All </span>
+            </button>            
+   
+          <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">unit: </span>
+              </div>
+              <input id="serviceName" type="text" class="form-control" placeholder="mysql" >
+              <button id="journalCtlButton" class="btn btn-outline-secondary"> journalCtl </button>
+            </div>
+          
         </div>
         <div class="col" style="background-color: gainsboro">
             <div> e.g. postgres, docker, myservice</div>  
@@ -59,7 +77,7 @@
                     <i class="fa fa-search"></i>
                   </span>
                 </div>
-                <textarea id="serviceFilters" class="form-control" aria-label="With textarea"></textarea>
+                <textarea rows="4" style="min-width:100px" id="serviceFilters" class="form-control" aria-label="With textarea"></textarea>
           </div>
 
           
