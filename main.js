@@ -1,17 +1,49 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Menu, Tray} = require('electron')
+const {app, BrowserWindow, Menu, MenuItem, Tray, ipcMain} = require('electron')
 
+
+var menu;
+
+ipcMain.on('init-message', (event, arg) => {
+  // console.log(arg) // prints "ping"
+  event.sender.send('asynchronous-reply', 'pong')
+})
+
+ipcMain.on('SERVICE_NAME', (event, arg) => {
+
+  menu.destroy()
+  tray.destroy()
+  
+  createTray(lastService=arg)
+
+  // event.sender.send('asynchronous-reply', 'pong')
+})
+
+function createTray(lastService=null){
+  tray = new Tray('./picksmall24x24.png')
+  menu = new Menu()
+    // const menu = Menu.buildFromTemplate([
+  //   {label: 'Item1', type: 'radio'},
+  //   {label: 'Item2', type: 'radio'},
+  //   {label: 'Item3', type: 'radio', checked: true},
+  //   {label: 'Item4', type: 'radio'}
+   
+  // ])
+  menu.append(new MenuItem({id: 'lastService', label: lastService == null ? '--' : lastService }))
+  menu.append(new MenuItem({type: 'separator'}))
+  menu.append(new MenuItem({label: 'Quit', click() {
+     app.quit()
+    }}))
+  
+
+  tray.setToolTip('systemd Journeyman ----')
+  tray.setContextMenu(menu)
+}
 let tray = null
 app.on('ready', () => {
-  tray = new Tray('./pick.png')
-  const contextMenu = Menu.buildFromTemplate([
-    {label: 'Item1', type: 'radio'},
-    {label: 'Item2', type: 'radio'},
-    {label: 'Item3', type: 'radio', checked: true},
-    {label: 'Item4', type: 'radio'}
-  ])
-  tray.setToolTip('This is my application.')
-  tray.setContextMenu(contextMenu)
+  
+  createTray()
+
 })
 
 // Keep a global reference of the window object, if you don't, the window will

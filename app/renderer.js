@@ -9,6 +9,9 @@ fs = require('fs')
 path = require('path')
 node_ssh = require('node-ssh')
 
+const {ipcRenderer} = require('electron')
+
+
 const storage = require('electron-json-storage');
 
 
@@ -35,6 +38,8 @@ let journalCtlButton = document.getElementById("journalCtlButton")
 
 document.addEventListener("DOMContentLoaded", function(){
   loadStorage();
+
+  ipcRenderer.send('init-message', 'ping')
 })
 
 function getFilterNames(){
@@ -151,7 +156,15 @@ scanSystemCtlButton.addEventListener('click', function(){
 })
 
 journalCtlButton.addEventListener('click', function(){
-  
+  let serviceName = document.getElementById('serviceName').value.trim()
+
+  // ipcRenderer.sendSync('synchronous-message', 'ping'))
+  ipcRenderer.send('SERVICE_NAME', serviceName)
+  // let menu = Menu.getApplicationMenu()
+  // console.log(menu);
+  // let menuItem = menu.getMenuItemById("lastService")
+  // menuItem.label = serviceName
+
   session.then(function() {
     // Local, Remote
     // Command
@@ -159,7 +172,6 @@ journalCtlButton.addEventListener('click', function(){
     // jDiv.scrollIntoView()
     document.getElementById('loader').style.display = 'block';
 
-    let serviceName = document.getElementById('serviceName').value.trim()
     
     // only show recent 200 lines
     ssh.execCommand('journalctl --reverse --unit ' + serviceName)
@@ -240,7 +252,7 @@ function resetSSH(){
 
 function followService(serviceName){
   resetSSH();
-  
+
   let jDiv = document.getElementById("journalCtlParsed")
   jDiv.innerHTML = "";
   resetSSHButton = document.createElement("button")
